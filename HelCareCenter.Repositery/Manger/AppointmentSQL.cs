@@ -30,21 +30,37 @@ namespace HelCareCenter.Repositery.Manger
 
         public override async Task<Appointment> ADD(Appointment addedItem)
         {
-           var result =  await CheckAvilability(addedItem.DoctorID, addedItem.From, addedItem.To);
+           var result =  await IsAvilable(addedItem.DoctorID, addedItem.From, addedItem.To);
             if (result)                
             return await base.ADD(addedItem);
 
             return new Appointment(); 
         }
-        public async Task<bool> CheckAvilability(int doctorId, DateTime from, DateTime to)
+       
+
+        public async Task<bool> IsAvilable(int doctorId, DateTime from, DateTime to)
         {
-            bool result = false;
+            bool result = true;
 
-           var appointmentres =  await db.Appointments.Where(i => i.DoctorID == doctorId && to < i.From).ToListAsync();
-            if (appointmentres.Count == 0) result = true;    
+            var periods = GetAllDates(from, to, 3600);
 
-            return result; 
+            foreach (var period in periods)
+            {
+                var appointmentres = await db.Appointments.Where(i => i.DoctorID == doctorId &&  i.From < period && period < i.To).ToListAsync();
+                if (appointmentres.Count > 0) return false;
+               
+            }
+            return result;
+        }
+
+        public static List<DateTime> GetAllDates(DateTime startDate, DateTime endDate, int slotWithSecond)
+        {
+            List<DateTime> allDates = new List<DateTime>();
+            for (DateTime date = startDate; date <= endDate; date = date.AddSeconds(slotWithSecond))
+                allDates.Add(date);
+            return allDates;
         }
     }
+
 }
 

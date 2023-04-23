@@ -10,7 +10,7 @@ namespace HelCareCenter.Repositery.IManger
 {
     public interface IAppointment :IGeneral<Appointment>
     {
-        Task<bool> CheckAvilability(int doctorId, DateTime from, DateTime to);
+        Task<bool> IsAvilable(int doctorId, DateTime from, DateTime to);
 
         Task<Appointment> Accept(Appointment appointment);
     }

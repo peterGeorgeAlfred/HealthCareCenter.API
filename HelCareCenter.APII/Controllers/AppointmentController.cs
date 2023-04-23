@@ -74,7 +74,7 @@ namespace HelCareCenter.APII.Controllers
             {
 
 
-                var result = await AppointmentDB.CheckAvilability(model.DoctorID , model.From , model.To);
+                var result = await AppointmentDB.IsAvilable(model.DoctorID , model.From , model.To);
                 if (result) return Ok("Avilable ");
 
                 return Ok("Not Avilable"); 

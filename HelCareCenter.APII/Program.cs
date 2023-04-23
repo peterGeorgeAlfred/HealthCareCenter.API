@@ -116,7 +116,7 @@ namespace HelCareCenter.APII
                 options.AddSecurityRequirement(securityRequirement);
             });
 
-            //#endregion
+            #endregion
 
             var app = builder.Build();
 
